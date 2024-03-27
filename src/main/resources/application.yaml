@@ -22,5 +22,3 @@ logging:
     org:
       hibernate:
         SQL: debug
-
-secret-key: 9415fe02ea42a9a61a39c8f3746167b96e626575210dcaeac9a58554529f1fc5
