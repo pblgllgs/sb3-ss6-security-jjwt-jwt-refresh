@@ -1,0 +1,26 @@
+
+spring:
+  application:
+    name: sb3-ss6-security-jjwt-jwt-refresh
+  datasource:
+    url: jdbc:mysql://localhost:3306/db_security
+    username: root
+    password: password
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+    database: mysql
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: debug
+
+secret-key: 9415fe02ea42a9a61a39c8f3746167b96e626575210dcaeac9a58554529f1fc5
