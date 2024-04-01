@@ -7,6 +7,7 @@ package com.pblgllgs.security.services.impl;
  */
 
 import com.pblgllgs.security.dto.JwtAuthenticationResponse;
+import com.pblgllgs.security.dto.RefreshTokenRequest;
 import com.pblgllgs.security.dto.SignUpRequest;
 import com.pblgllgs.security.dto.SigninRequest;
 import com.pblgllgs.security.entities.User;
@@ -32,7 +33,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final JwtService jwtService;
 
     @Override
-    public User signUp(SignUpRequest signUpRequest){
+    public User signUp(SignUpRequest signUpRequest) {
         User user = User.builder()
                 .email(signUpRequest.email())
                 .firstName(signUpRequest.firstName())
@@ -46,13 +47,29 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public JwtAuthenticationResponse login(SigninRequest request) {
         User user = userRepository.findByEmail(request.email())
-                .orElseThrow( () -> new UsernameNotFoundException("USERNAME_NOT_FOUND"));
+                .orElseThrow(() -> new UsernameNotFoundException("USERNAME_NOT_FOUND"));
         String accessToken = jwtService.generateToken(user);
-        String refreshToken = jwtService.refreshToken(new HashMap<>(),user);
+        String refreshToken = jwtService.refreshToken(new HashMap<>(), user);
         return new JwtAuthenticationResponse(
                 accessToken,
                 refreshToken
         );
+    }
+
+    @Override
+    public JwtAuthenticationResponse refreshtoken(RefreshTokenRequest refreshTokenRequest) {
+        String userEmail = jwtService.extractUsername(refreshTokenRequest.token());
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(
+                        () -> new UsernameNotFoundException("USER_NOT_FOUND_WITH_EMAIL: " + userEmail)
+                );
+        if (jwtService.isTokenValid(refreshTokenRequest.token(), user)){
+            return new JwtAuthenticationResponse(
+                    jwtService.generateToken(user),
+                    refreshTokenRequest.token()
+            );
+        }
+        return null;
     }
 
 }

@@ -6,6 +6,7 @@ package com.pblgllgs.security.controller;
  *
  */
 
+import com.pblgllgs.security.dto.RefreshTokenRequest;
 import com.pblgllgs.security.dto.SignUpRequest;
 import com.pblgllgs.security.dto.SigninRequest;
 import com.pblgllgs.security.services.AuthenticationService;
@@ -30,7 +31,12 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> register(@RequestBody SigninRequest signinRequest){
+    public ResponseEntity<?> login(@RequestBody SigninRequest signinRequest){
         return new ResponseEntity<>(authenticationService.login(signinRequest), HttpStatus.OK);
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest){
+        return new ResponseEntity<>(authenticationService.refreshtoken(refreshTokenRequest), HttpStatus.OK);
     }
 }
